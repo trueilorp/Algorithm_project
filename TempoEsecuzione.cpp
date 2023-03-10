@@ -26,13 +26,16 @@
 #include <math.h>
 #include <chrono> //libreria per il clock di sistema 
 
-#include "Header.h"
+//#include "Header.h" // --> serve?
+#include "PeriodoNaive.cpp"
+#include "PeriodSmart.cpp"
+#include "PeriodoNaiveConCompare.cpp"
 
 using namespace std;
 using namespace std::chrono; //per il clock di sistema 
 
 #define A 1000
-#define B 1
+#define B 1.06478598  //trovato per tentativi
 
 #define E 0.001 //Errore relativo massimo ammissibile
 
@@ -44,13 +47,17 @@ double getResolution();
 double tempoMinimoMisurabile(double);
 
 
-
-int scegliX()
+/**
+ * @brief Calcola l'esponente
+ * 
+ * @return int 
+ */
+int scegliX() 
 {
     int x;
     srand(time(NULL)); //serve per evitare che ogni volta venga generato lo stesso numero
     x = rand()%100; //genero x tra 0...99 --> Quindi  rand()%100 restituisce i numeri da 0 a 99.
-    cout << x << endl;
+    cout << "Esponente: " << x << endl;
     return x;
 }
 
@@ -58,7 +65,7 @@ int generaLunghezzaStringa()
 {
     int x = scegliX();
     int n = floor (A*pow(B,x)); //x deve essere scelta tra 0 e 99
-    cout << n << endl;
+    cout << "Lunghezza stringa: " << n << endl;
     return n;
 }
 
@@ -70,10 +77,13 @@ int* generaNumeri(int n)
 {
     int a[n];
 	int j;
+    
+    cout << "Stringa: ";
 
 	srand(time(NULL));
 	for (j=0; j<n; j++){		
 		a[j]=rand()%3+1; //qui cambio il %2 in %3 per usare rispettivamente alfabeto binario o terziario
+        cout << a[j];
 	}
 				
     //stampo i numeri dell'array
@@ -98,12 +108,9 @@ string convert(int arr[], int n) {
 }
 
 /**
- * @brief Per ogni stringa s di lunghezza n  generata, occorre quindi stimare il tempo di esecuzione per ognuno dei due algoritmi,
- * PeriodNaive o PeriodSmart. Si richiede una stima del tempo medio di esecuzione al variare della lunghezza n
- * della stringa che garantisca un errore relativo massimo pari a 0.001. A tal fine si procede nel modo seguente. 
+ * @brief Il primo passo consiste nello stimare la risoluzione del clock di sistema,
+ * utilizzando un ciclo while per calcolare l'intervallo minimo di tempo misurabile
  */
-
-
 double getResolution() 
 {
     steady_clock::time_point start = steady_clock::now();
@@ -156,12 +163,50 @@ double stimaTempoAlgoritmo()
 
 int main()
 {
-    //int n = generaLunghezzaStringa(); //lunghezza della stringa da scegliere con la funzione esponenziale
+    int n = generaLunghezzaStringa(); //lunghezza della stringa da scegliere con la funzione esponenziale
 
-	//generaNumeri(n); //genera una stringa di lunghezza n
+	generaNumeri(n); //genera una stringa di lunghezza n
 
-    cout << stimaTempoAlgoritmo();
-
+    stimaTempoAlgoritmo();
 
 	return 0;	
 }
+
+
+/*
+
+L'idea è quella di creare una variabile che prenda il tempo di inizio dell'esecuzione del programma ed una che 
+prenda il tempo di fine esecuzione e poi si fa la sottrazione tenendo conto di eventuali errori ect..
+
+*/
+
+/*
+CODICE PER LA STIMA DEI TEMPI CON chatGBT
+
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+
+void myFunction() {
+  // qui inserisci la tua funzione
+}
+
+int main() {
+  clock_t start, end;
+  double cpu_time_used;
+
+  start = clock(); // inizio del conteggio del tempo
+
+  myFunction(); // chiamata alla tua funzione
+
+  end = clock(); // fine del conteggio del tempo
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+  cout << "Tempo di esecuzione: " << cpu_time_used << " secondi." << endl;
+
+  return 0;
+}
+
+
+*/

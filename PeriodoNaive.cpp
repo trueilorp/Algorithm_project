@@ -10,6 +10,8 @@
 #include <string>
 #include <iostream>
 
+#include "Header.h"
+
 using namespace std;
 
 int periodNaive (string s)
@@ -37,6 +39,7 @@ int periodNaive (string s)
   return ps;
 }
 
+/*
 int main()
 {
   string s;
@@ -45,7 +48,15 @@ int main()
 
   printf("%d ", periodNaive(s));
   return 0;
-}
+}*/
+
+
+
+
+
+//-----------------------
+
+
 
 /*
 int main()

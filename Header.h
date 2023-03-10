@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int periodNaive (string s);
+int periodNaive(string s);
 int pfLineare(string s);
 int getPeriod(string s);
 

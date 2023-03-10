@@ -3,6 +3,8 @@
 #include <string.h>
 #include <string>
 
+#include "Header.h"
+
 using namespace std;
 
 /**
@@ -28,6 +30,7 @@ int getPeriod(string s)
     
 }
 
+/*
 int main()
 {
     char s[1000];
@@ -36,4 +39,4 @@ int main()
     printf("%d", getPeriod(s));
 
     return 0;
-}
+}*/

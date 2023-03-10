@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+#include "Header.h"
+
 using namespace std;
 
 /*
@@ -94,6 +96,7 @@ int pfLineare(string s)
     return p; // che è il bordo massimo di s
 }
 
+/*
 int main()
 {
     string s;
@@ -105,4 +108,4 @@ int main()
 
     return 0;
 }
-
+*/
