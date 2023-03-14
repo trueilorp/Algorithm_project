@@ -94,6 +94,7 @@ int* generaNumeri(int n)
 	/*for (j=0; j<n; j++){		
 		   cout << a[j];
 	}*/
+    
     return a;
 }
 
@@ -162,31 +163,35 @@ string preparaStringa()
  * funzione che calcola il tempo totale e le iterazioni fatte
 */
 
-double calcolaTempo(string s){
+void calcolaTempo(){
     double R = getResolution(); //stima il clock di sistema 
     double t_minimo = tempoMinimoMisurabile(R); //calcolo il tempo minimo misurabile
-    clock_t t_inizio, t_fine, t_inizioFunzione, t_fineFunzione;
+    clock_t t_TOT, t_inizioFunzione, t_fineFunzione;
     double t, t_medio;
-    int count = 0;
-    t_inizio = clock(); // inizio del conteggio del tempo
+    int count = 0, k = 0;
     do{
-        t_inizioFunzione = clock();
-        int k = pfLineare(s);
-        t_fineFunzione = clock();
-        t = ((double) (t_fineFunzione - t_inizioFunzione));
-        count++;
+        string s = preparaStringa();  //prepara la stringa
+        t_inizioFunzione = clock(); //setto l'inizio del cronometro
+        k = pfLineare(s); //eseguo l'algoritmo
+        t_fineFunzione = clock();//fermo il cronometro
+        t = ((double) (t_fineFunzione - t_inizioFunzione) / CLOCKS_PER_SEC);//calcolo il tempo di esecuzione
+        cout << '\n';
+        cout << t << endl;
+        cout << t_minimo << endl;
+        count++;//tengo traccia del numero di iterazioni fatte
     }while(t < t_minimo);
-    t_fine = clock();
-    t_medio = ((double) (t_fine - t_inizio)) / count;
-    return t_medio;
+    t_TOT = ((double) (t_TOT + t) / CLOCKS_PER_SEC);
+    t_medio = ((double) (t_TOT) / CLOCKS_PER_SEC) / count;
+    cout << '\n';
+    cout << count << endl;
+    // cout << t_medio << endl;
 }
 
 int main(){
     
     
-    double porco = calcolaTempo(preparaStringa());
+    calcolaTempo();
     cout << endl;
-    cout << porco;
 
 	return 0;	
 }
