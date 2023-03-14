@@ -35,6 +35,7 @@ using namespace std::chrono; //per il clock di sistema
 #define B 1.06478598  //trovato per tentativi
 #define E 0.001 //Errore relativo massimo ammissibile
 
+typedef duration<double, seconds::period> secs;
 
 /**
  * @brief Calcola l'esponente
@@ -108,7 +109,6 @@ double getResolution()
     do {
         end = steady_clock::now();
     } while (start == end);
-    typedef duration<double, seconds::period> secs;
     return duration_cast<secs>(end - start).count();
 }
 
@@ -151,25 +151,23 @@ void calcolaTempo(){
     double R = getResolution(); //stima il clock di sistema 
     double t_minimo = tempoMinimoMisurabile(R); //calcolo il tempo minimo misurabile
     
-    clock_t t_TOT, t_inizioFunzione, t_fineFunzione;
-    double t, t_medio;
+    steady_clock::time_point t_inizioFunzione, t_fineFunzione;
+    double t, t_medio, t_TOT;
     int count = 0, k = 0;
     
     do{
-        string *s = new string;
-        *s = preparaStringa();  //prepara la stringa
-        t_inizioFunzione = clock(); //setto l'inizio del cronometro
-        k = periodSmart(*s); //eseguo l'algoritmo
-        t_fineFunzione = clock();//fermo il cronometro
-        t = ((double) (t_fineFunzione - t_inizioFunzione) / CLOCKS_PER_SEC);//calcolo il tempo di esecuzione
-        delete(s);
+        string s = preparaStringa();  //prepara la stringa
+        t_inizioFunzione = steady_clock::now(); //setto l'inizio del cronometro
+        k = periodSmart(s); //eseguo l'algoritmo
+        t_fineFunzione = steady_clock::now();;//fermo il cronometro
+        t = duration_cast<secs>(t_fineFunzione - t_inizioFunzione).count();//calcolo il tempo di esecuzione
         cout << '\n';
         cout << t << endl;
         cout << t_minimo << endl;
         count++;//tengo traccia del numero di iterazioni fatte
     }while(t < t_minimo);
-    t_TOT = ((double) (t_TOT + t) / CLOCKS_PER_SEC);
-    t_medio = ((double) (t_TOT) / CLOCKS_PER_SEC) / count;
+    t_TOT = t_TOT + t;
+    t_medio = t_TOT / count;
     cout << '\n';
     cout << count << endl;
     // cout << t_medio << endl;
