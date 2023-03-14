@@ -61,6 +61,10 @@ int scegliX()
     return x;
 }
 
+/**
+ * Questa funziona genera casualmente un numero da 1000 a 500.000 che sarà poi la lunghezza della stringa 
+ * 
+*/
 int generaLunghezzaStringa()
 {
     int x = scegliX();
@@ -126,7 +130,7 @@ double getResolution()
  * @brief Successivamente, in funzione della risoluzione stimata R e dell'errore relativo massimo ammissibile (E=0.001), 
  * si calcola il tempo minimo misurabile
  * 
- * T_min=R⋅(1/E+1).
+ * T_min = R⋅(1/E+1).
  */
 double tempoMinimoMisurabile(double R)
 {
@@ -142,32 +146,47 @@ double tempoMinimoMisurabile(double R)
  * e il numero di iterazioni eseguite.
  */
 
-double stimaTempoAlgoritmo()
+
+/**
+ * Funzione che prepara l'esecuzione dell'algoritmo
+*/
+string preparaStringa()
 {
-    int t=0;
     int n = generaLunghezzaStringa();
     int* array = generaNumeri(n);
     string s = convert(array,n); //qui ho la mia stringa che darò in pasto all'algoritmo per il periodo frazionario
-    double R = getResolution(); //prendo la risoluzione 
-    double t_minimo = tempoMinimoMisurabile(R); //calcolo il tempo minimo misurabile
-    while(t < t_minimo)
-    {
-        //esempio: con periodo Smart
-        pfLineare(s);
-        t++;
-    }
-
-    return 0;
-    
+    return s;
 }
 
-int main()
-{
-    int n = generaLunghezzaStringa(); //lunghezza della stringa da scegliere con la funzione esponenziale
+/**
+ * funzione che calcola il tempo totale e le iterazioni fatte
+*/
 
-	generaNumeri(n); //genera una stringa di lunghezza n
+double calcolaTempo(string s){
+    double R = getResolution(); //stima il clock di sistema 
+    double t_minimo = tempoMinimoMisurabile(R); //calcolo il tempo minimo misurabile
+    clock_t t_inizio, t_fine, t_inizioFunzione, t_fineFunzione;
+    double t, t_medio;
+    int count = 0;
+    t_inizio = clock(); // inizio del conteggio del tempo
+    do{
+        t_inizioFunzione = clock();
+        int k = pfLineare(s);
+        t_fineFunzione = clock();
+        t = ((double) (t_fineFunzione - t_inizioFunzione));
+        count++;
+    }while(t < t_minimo);
+    t_fine = clock();
+    t_medio = ((double) (t_fine - t_inizio)) / count;
+    return t_medio;
+}
 
-    stimaTempoAlgoritmo();
+int main(){
+    
+    
+    double porco = calcolaTempo(preparaStringa());
+    cout << endl;
+    cout << porco;
 
 	return 0;	
 }
