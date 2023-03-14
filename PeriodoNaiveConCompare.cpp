@@ -3,8 +3,6 @@
 #include <string.h>
 #include <string>
 
-#include "Header.h"
-
 using namespace std;
 
 /**
@@ -15,19 +13,16 @@ using namespace std;
  * 
  */
 
-int getPeriod(string s)
-{
+int getPeriod(string s){
     int n = s.length();
-    for (int p=1; p<= n; p++)
-    {
+    for (int p=1; p<= n; p++){
         string s1= s.substr(0, n-p);
         string s2= s.substr(p, n-p);
-        if(s1.compare(s2) == 0)
-        {
+        if(s1.compare(s2) == 0){
             return p;
         }
     }
-    
+    return -1; // return di errore
 }
 
 /*

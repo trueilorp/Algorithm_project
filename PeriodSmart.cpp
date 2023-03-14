@@ -1,10 +1,7 @@
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-
-#include "Header.h"
 
 using namespace std;
 
@@ -68,7 +65,7 @@ maxBorder(s)
 }
 */
 
-int pfLineare(string s)
+int periodSmart(string s)
 {
     int n = s.length();
     int r[n]; //inizializzo un array che mi serve per memorizzare i bordi

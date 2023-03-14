@@ -17,6 +17,7 @@
  */
 
 #include <cstdlib>
+#include <random>
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
@@ -25,26 +26,14 @@
 #include <ctime>
 #include <math.h>
 #include <chrono> //libreria per il clock di sistema 
-
-//#include "Header.h" // --> serve?
-#include "PeriodoNaive.cpp"
-#include "PeriodSmart.cpp"
-#include "PeriodoNaiveConCompare.cpp"
+#include "Header.h"
 
 using namespace std;
 using namespace std::chrono; //per il clock di sistema 
 
 #define A 1000
 #define B 1.06478598  //trovato per tentativi
-
 #define E 0.001 //Errore relativo massimo ammissibile
-
-//INTESTAZIONI
-int scegliX();
-int generaLunghezzaStringa();
-int* generaNumeri(int);
-double getResolution();
-double tempoMinimoMisurabile(double);
 
 
 /**
@@ -52,14 +41,19 @@ double tempoMinimoMisurabile(double);
  * 
  * @return int 
  */
-int scegliX() 
-{
-    int x;
-    srand(time(NULL)); //serve per evitare che ogni volta venga generato lo stesso numero
-    x = rand()%100; //genero x tra 0...99 --> Quindi  rand()%100 restituisce i numeri da 0 a 99.
-    cout << "Esponente: " << x << endl;
-    return x;
+
+int generatoreNumeri(int n) {
+  std::random_device rd;  
+  std::mt19937 gen(rd()); 
+  std::uniform_int_distribution<> distrib(1, n);
+  return distrib(gen);
 }
+
+int scegliEsponente() 
+{
+    return generatoreNumeri(100);
+}
+
 
 /**
  * Questa funziona genera casualmente un numero da 1000 a 500.000 che sarà poi la lunghezza della stringa 
@@ -67,7 +61,7 @@ int scegliX()
 */
 int generaLunghezzaStringa()
 {
-    int x = scegliX();
+    int x = scegliEsponente();
     int n = floor (A*pow(B,x)); //x deve essere scelta tra 0 e 99
     cout << "Lunghezza stringa: " << n << endl;
     return n;
@@ -77,39 +71,30 @@ int generaLunghezzaStringa()
      * @brief Funzione per calcolare il tempo di esecuzione usando n fisso a 99
      * Genera numeri random prendendo da un alfabeto binario/terziario e memorizzando tutti i numeri in un array
      */
-int* generaNumeri(int n)
-{
-    int a[n];
-	int j;
+string generaStringa(int n){
+    string a = (char*)malloc(sizeof(char)*n);;
+	int i;
+    int tmp;
     
     cout << "Stringa: ";
 
-	srand(time(NULL));
-	for (j=0; j<n; j++){		
-		a[j]=rand()%3+1; //qui cambio il %2 in %3 per usare rispettivamente alfabeto binario o terziario
-        cout << a[j];
+	for (i=0; i<n; i++){		
+		tmp=generatoreNumeri(3); //qui cambio il %2 in %3 per usare rispettivamente alfabeto binario o terziario
+        if(tmp == 1){
+            a = a + 'a';
+        } else if(tmp == 2){
+            a = a + 'b';
+        } else {
+            a = a + 'c';
+        }
 	}
 				
     //stampo i numeri dell'array
 	/*for (j=0; j<n; j++){		
 		   cout << a[j];
 	}*/
-    
+    cout << a << endl;
     return a;
-}
-
-/**
- * @brief Converte l'array di int in una stringa
- * @param arr 
- * @param n 
- * @return std::string 
- */
-string convert(int arr[], int n) {
-    string s;
-    for (int i = 0; i < n; i++) {
-        s += to_string(arr[i]);
-    }
-    return s;
 }
 
 /**
@@ -149,14 +134,13 @@ double tempoMinimoMisurabile(double R)
 
 
 /**
- * Funzione che prepara l'esecuzione dell'algoritmo
+ * Funzione che prepara la stringa per l'esecuzione dell'algoritmo
 */
 string preparaStringa()
 {
     int n = generaLunghezzaStringa();
-    int* array = generaNumeri(n);
-    string s = convert(array,n); //qui ho la mia stringa che darò in pasto all'algoritmo per il periodo frazionario
-    return s;
+    string stringa = generaStringa(n);
+    return stringa;
 }
 
 /**
@@ -166,15 +150,19 @@ string preparaStringa()
 void calcolaTempo(){
     double R = getResolution(); //stima il clock di sistema 
     double t_minimo = tempoMinimoMisurabile(R); //calcolo il tempo minimo misurabile
+    
     clock_t t_TOT, t_inizioFunzione, t_fineFunzione;
     double t, t_medio;
     int count = 0, k = 0;
+    
     do{
-        string s = preparaStringa();  //prepara la stringa
+        string *s = new string;
+        *s = preparaStringa();  //prepara la stringa
         t_inizioFunzione = clock(); //setto l'inizio del cronometro
-        k = pfLineare(s); //eseguo l'algoritmo
+        k = periodSmart(*s); //eseguo l'algoritmo
         t_fineFunzione = clock();//fermo il cronometro
         t = ((double) (t_fineFunzione - t_inizioFunzione) / CLOCKS_PER_SEC);//calcolo il tempo di esecuzione
+        delete(s);
         cout << '\n';
         cout << t << endl;
         cout << t_minimo << endl;
@@ -188,7 +176,6 @@ void calcolaTempo(){
 }
 
 int main(){
-    
     
     calcolaTempo();
     cout << endl;
