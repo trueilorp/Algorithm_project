@@ -16,26 +16,20 @@
  * 
  */
 
-#include <cstdlib>
-#include <random>
-#include <stdlib.h>
-#include <stdio.h>
 #include <iostream>
+#include <random>
 #include <string>
-#include <string.h>
-#include <ctime>
 #include <math.h>
 #include <chrono> //libreria per il clock di sistema 
 #include "Header.h"
 
 using namespace std;
 using namespace std::chrono; //per il clock di sistema 
+typedef duration<double, seconds::period> secs;
 
 #define A 1000
 #define B 1.06478598  //trovato per tentativi
 #define E 0.001 //Errore relativo massimo ammissibile
-
-typedef duration<double, seconds::period> secs;
 
 /**
  * @brief Calcola l'esponente
@@ -43,67 +37,66 @@ typedef duration<double, seconds::period> secs;
  * @return int 
  */
 
-int generatoreNumeri(int n) {
-  std::random_device rd;  
-  std::mt19937 gen(rd()); 
-  std::uniform_int_distribution<> distrib(1, n);
-  return distrib(gen);
+int generatoreNumeri(int n){
+    std::random_device rd;  
+    std::mt19937 gen(rd()); 
+    std::uniform_int_distribution<> distrib(0, n);
+    return distrib(gen);
 }
 
-int scegliEsponente() 
-{
-    return generatoreNumeri(100);
+/*
+int generaEsponente(){
+    return generatoreNumeri(99);
 }
+*/
 
 
 /**
  * Questa funziona genera casualmente un numero da 1000 a 500.000 che sarà poi la lunghezza della stringa 
  * 
 */
-int generaLunghezzaStringa()
-{
-    int x = scegliEsponente();
+int generaLunghezzaStringa(int x){
     int n = floor (A*pow(B,x)); //x deve essere scelta tra 0 e 99
-    cout << "Lunghezza stringa: " << n << endl;
+    // cout << "Lunghezza stringa: " << n << endl;
     return n;
 }
 
 /**
-     * @brief Funzione per calcolare il tempo di esecuzione usando n fisso a 99
-     * Genera numeri random prendendo da un alfabeto binario/terziario e memorizzando tutti i numeri in un array
-     */
+ * @brief Funzione per calcolare il tempo di esecuzione usando n fisso a 99
+ * Genera numeri random prendendo da un alfabeto binario/terziario e memorizzando tutti i numeri in un array
+*/
 string generaStringa(int n){
-    string a = (char*)malloc(sizeof(char)*n);;
+    string stringa;
 	int i;
     int tmp;
-    
-    cout << "Stringa: ";
 
 	for (i=0; i<n; i++){		
-		tmp=generatoreNumeri(3); //qui cambio il %2 in %3 per usare rispettivamente alfabeto binario o terziario
+		tmp=generatoreNumeri(2); //qui cambio il %2 in %3 per usare rispettivamente alfabeto binario o terziario
         if(tmp == 1){
-            a = a + 'a';
+            stringa = stringa + 'a';
         } else if(tmp == 2){
-            a = a + 'b';
+            stringa = stringa + 'b';
         } else {
-            a = a + 'c';
+            stringa = stringa + 'c';
         }
 	}
-				
-    //stampo i numeri dell'array
-	/*for (j=0; j<n; j++){		
-		   cout << a[j];
-	}*/
-    cout << a << endl;
-    return a;
+    return stringa;
+}
+
+/**
+ * Funzione che prepara la stringa per l'esecuzione dell'algoritmo
+*/
+string preparaStringa(int x){
+    int lunghezza = generaLunghezzaStringa(x);
+    string stringa = generaStringa(lunghezza);
+    return stringa;
 }
 
 /**
  * @brief Il primo passo consiste nello stimare la risoluzione del clock di sistema,
  * utilizzando un ciclo while per calcolare l'intervallo minimo di tempo misurabile
  */
-double getResolution() 
-{
+double getResolution(){
     steady_clock::time_point start = steady_clock::now();
     steady_clock::time_point end;
     do {
@@ -118,10 +111,9 @@ double getResolution()
  * 
  * T_min = R⋅(1/E+1).
  */
-double tempoMinimoMisurabile(double R)
-{
-    double t_minimo;
-    t_minimo = R*(1/E + 1);
+double tempoMinimoMisurabile(){
+    double R = getResolution();
+    double t_minimo = R*((1/E) + 1);
     return t_minimo;
 }
 
@@ -134,88 +126,47 @@ double tempoMinimoMisurabile(double R)
 
 
 /**
- * Funzione che prepara la stringa per l'esecuzione dell'algoritmo
-*/
-string preparaStringa()
-{
-    int n = generaLunghezzaStringa();
-    string stringa = generaStringa(n);
-    return stringa;
-}
-
-/**
  * funzione che calcola il tempo totale e le iterazioni fatte
 */
 
 void calcolaTempo(){
-    double R = getResolution(); //stima il clock di sistema 
-    double t_minimo = tempoMinimoMisurabile(R); //calcolo il tempo minimo misurabile
     
     steady_clock::time_point t_inizioFunzione, t_fineFunzione;
-    double t, t_medio, t_TOT;
+    double t, t_minimo, t_medio, t_TOT;
     int count = 0, k = 0;
     
-    do{
-        string s = preparaStringa();  //prepara la stringa
+    for(int i = 0; i < 100; i++){
+        t_minimo = tempoMinimoMisurabile();
         t_inizioFunzione = steady_clock::now(); //setto l'inizio del cronometro
-        k = periodSmart(s); //eseguo l'algoritmo
-        t_fineFunzione = steady_clock::now();;//fermo il cronometro
-        t = duration_cast<secs>(t_fineFunzione - t_inizioFunzione).count();//calcolo il tempo di esecuzione
-        cout << '\n';
-        cout << t << endl;
-        cout << t_minimo << endl;
-        count++;//tengo traccia del numero di iterazioni fatte
-    }while(t < t_minimo);
-    t_TOT = t_TOT + t;
-    t_medio = t_TOT / count;
-    cout << '\n';
-    cout << count << endl;
-    // cout << t_medio << endl;
+        do{
+            string s = preparaStringa(i);  //prepara la stringa
+            k = periodSmart(s); //eseguo l'algoritmo
+            t_fineFunzione = steady_clock::now();
+            t = duration_cast<secs>(t_fineFunzione - t_inizioFunzione).count(); //calcolo il tempo di esecuzione
+
+            t_TOT = t_TOT + t; //tengo traccia del tempo totale di esecuzione dell'algoritmo
+            count++; //tengo traccia del numero di iterazioni fatte
+            // cout << "Tempo di esecuzione: " << t << endl;
+            // cout << "Tempo minimo stimato: " << t_minimo << endl;
+        }while(t < t_minimo);
+        cout << t / count << endl;; //calcolo il tempo medio di esecuzione dividento il tempo totale per il numero di esecuzioni fatte
+        count = 0;
+        // cout << '\n';
+        // cout << count << endl;
+        // cout << t_medio << endl;
+    }
 }
 
-int main(){
-    
-    calcolaTempo();
-    cout << endl;
 
-	return 0;	
-}
+/**
+ * la modifica nel programma consiste nel valutare l'algoritmo sempre su una stringa di lunghezza prefissata
+ * iterando la procedura fino a quando il tempo di esecuzione supera la risoluzione del clock di sistema
+*/
 
 
 /*
 
 L'idea è quella di creare una variabile che prenda il tempo di inizio dell'esecuzione del programma ed una che 
 prenda il tempo di fine esecuzione e poi si fa la sottrazione tenendo conto di eventuali errori ect..
-
-*/
-
-/*
-CODICE PER LA STIMA DEI TEMPI CON chatGBT
-
-#include <iostream>
-#include <ctime>
-
-using namespace std;
-
-void myFunction() {
-  // qui inserisci la tua funzione
-}
-
-int main() {
-  clock_t start, end;
-  double cpu_time_used;
-
-  start = clock(); // inizio del conteggio del tempo
-
-  myFunction(); // chiamata alla tua funzione
-
-  end = clock(); // fine del conteggio del tempo
-  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-  cout << "Tempo di esecuzione: " << cpu_time_used << " secondi." << endl;
-
-  return 0;
-}
-
 
 */
