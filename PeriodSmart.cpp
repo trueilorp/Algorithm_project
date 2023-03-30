@@ -70,7 +70,7 @@ int periodSmart(string s)
     int n = s.length();
     int r[n]; //inizializzo un array che mi serve per memorizzare i bordi
     r[1] = 0;
-     //calcolo r(i+1) basandomi sui valori che ho calcolato in precendenza --> r(1), r(2)...
+    //calcolo r(i+1) basandomi sui valori che ho calcolato in precendenza --> r(1), r(2)...
 
     //prima devo cercare un bordo z di s[1...i] che soddisfi s[i+1] = s[z+1] e z deve essere massimo
     for(int i=1; i<n;i++) //calcolo r[i+1]
@@ -93,16 +93,3 @@ int periodSmart(string s)
     return p; // che è il bordo massimo di s
 }
 
-/*
-int main()
-{
-    string s;
-    cout << "Inserire stringa:";
-    cin >> s;
-    //cout << s;
-
-    cout << pfLineare(s);
-
-    return 0;
-}
-*/

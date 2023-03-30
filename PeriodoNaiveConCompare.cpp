@@ -13,7 +13,7 @@ using namespace std;
  * 
  */
 
-int getPeriod(string s){
+int periodNaiveConCompare(string s){
     int n = s.length();
     for (int p=1; p<= n; p++){
         string s1= s.substr(0, n-p);
@@ -24,14 +24,3 @@ int getPeriod(string s){
     }
     return -1; // return di errore
 }
-
-/*
-int main()
-{
-    char s[1000];
-    printf("Inserire stringa: ");
-    scanf("%[^\n]s", s);
-    printf("%d", getPeriod(s));
-
-    return 0;
-}*/
