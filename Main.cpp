@@ -4,8 +4,8 @@
 using namespace std;
 
 /**
- * CONTIENE IL MAIN DEL PROGRAMMA 
-*/
+ * @brief Contiene il Main del programma 
+ */
 
 int main(){
     

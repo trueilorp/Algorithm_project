@@ -3,6 +3,10 @@
 #include "PeriodoNaiveConCompare.cpp"
 #include "PreparazioneStringa.cpp"
 
+/**
+ * @brief Dichiarazioni dei metodi usati
+ */
+
 using namespace std;
 
 int periodNaiveConCompare(string s);

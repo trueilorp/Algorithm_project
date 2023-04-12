@@ -5,22 +5,23 @@
 using namespace std;
 
 #define A 1000
-#define B 1.06478598  //trovato per tentativi
-
+#define B 1.06478598  //B = (n/A)^(1/i) = (500000/1000)^(1/99)
 
 /**
- * Funzione che prendendo in input un valore compreso tra 0 e 99 restituisce la lunghezza della stringa
-*/
+ * @brief Restituisce la lunghezza della stringa 
+ * @param x intero compreso tra 0 e 99
+ * @return lunghezza della stringa 
+ */
 int generaLunghezzaStringa(int x){
-    int n = floor (A*pow(B,x)); //x deve essere scelta tra 0 e 99
-    // cout << n << ";";
+    int n = floor (A*pow(B,x)); 
     return n;
 }
 
 /**
- * @brief Funzione per calcolare il tempo di esecuzione usando n fisso a 99
- * Genera numeri random prendendo da un alfabeto binario/terziario e memorizzando tutti i numeri in un array
-*/
+ * @brief Genera in modo casuale una stringa sull'alfabeto ternario (a,b,c)
+ * @param n lunghezza stringa
+ * @return string che andrà analizzata
+ */
 string generaStringa(int n){
     string stringa(n, 'a');
     char tmp;
@@ -32,8 +33,8 @@ string generaStringa(int n){
 }
 
 /**
- * Funzione che prepara la stringa per l'esecuzione dell'algoritmo
-*/
+ * @brief mette assieme le due operazioni precedenti
+ */
 string preparaStringa(int x){
     int lunghezza = generaLunghezzaStringa(x);
     string stringa = generaStringa(lunghezza);
