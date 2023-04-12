@@ -7,7 +7,6 @@ using namespace std;
  * CONTIENE IL MAIN DEL PROGRAMMA 
 */
 
-
 int main(){
     
     calcolaTempo();
@@ -15,3 +14,4 @@ int main(){
 
 	return 0;	
 }
+

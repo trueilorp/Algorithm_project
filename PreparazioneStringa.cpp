@@ -13,7 +13,7 @@ using namespace std;
 */
 int generaLunghezzaStringa(int x){
     int n = floor (A*pow(B,x)); //x deve essere scelta tra 0 e 99
-    cout << n << ";";
+    // cout << n << ";";
     return n;
 }
 
@@ -22,12 +22,11 @@ int generaLunghezzaStringa(int x){
  * Genera numeri random prendendo da un alfabeto binario/terziario e memorizzando tutti i numeri in un array
 */
 string generaStringa(int n){
-    string stringa;
-	int i;
+    string stringa(n, 'a');
     char tmp;
-	for (i=0; i<n; i++){	
-        tmp = random() % 3 + 'a';
-		stringa = stringa + tmp;
+	for (int i=0; i<n; i++){	
+        tmp = rand() % 3 + 'a';
+		stringa[i] = tmp;
 	}
     return stringa;
 }

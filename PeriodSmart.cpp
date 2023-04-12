@@ -68,7 +68,7 @@ maxBorder(s)
 int periodSmart(string s)
 {
     int n = s.length();
-    int r[n]; //inizializzo un array che mi serve per memorizzare i bordi
+    int r[n+1]; //inizializzo un array che mi serve per memorizzare i bordi
     r[1] = 0;
     //calcolo r(i+1) basandomi sui valori che ho calcolato in precendenza --> r(1), r(2)...
 
@@ -76,12 +76,11 @@ int periodSmart(string s)
     for(int i=1; i<n;i++) //calcolo r[i+1]
     { 
         int z = r[i];  //invariante z=r^k[i]
-        while((s[z] != s[i]) && z>0)
-        {
+        while((s[i+1] != s[z+1]) && z>0){
             //ovvero mentre la condizione non è soddisfatta mi vado a cercare il bordo più piccolo
             z = r[z]; //z<i sempre 
         }
-        if (s[z] == s[i])
+        if (s[i+1] == s[z+1])
         {
             r[i+1] = z+1;
         }else

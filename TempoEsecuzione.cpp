@@ -77,7 +77,7 @@ void stimaTempoPreparazioneStringa(double tempiMedi[]){
             t_fine = steady_clock::now();
             t = duration_cast<secs>(t_fine - t_inizio).count();
             count++;
-        } while (t < t_minimo);
+        } while ( t < t_minimo);
         tempiMedi[i] = t / count;
         count = 0;
     }
@@ -86,7 +86,7 @@ void stimaTempoPreparazioneStringa(double tempiMedi[]){
 
 void calcolaTempo(){
     steady_clock::time_point t_inizioFunzione, t_fineFunzione;
-    double t, t_minimo, t_medio, t_TOT;
+    double t, t_minimo;
     int count = 0, k = 0;
 
     double tempoPreparazioneStringa[100];
@@ -102,7 +102,7 @@ void calcolaTempo(){
             t = duration_cast<secs>(t_fineFunzione - t_inizioFunzione).count(); //calcolo il tempo di esecuzione
             count++; //tengo traccia del numero di iterazioni fatte
         } while(t < t_minimo);
-        cout << (t / count) - (tempoPreparazioneStringa[i] * count) << endl;; //calcolo il tempo medio di esecuzione dividento il tempo totale per il numero di esecuzioni fatte
+        cout << (t / count) - (tempoPreparazioneStringa[i] * count) << endl; //calcolo il tempo medio di esecuzione dividento il tempo totale per il numero di esecuzioni fatte
         count = 0;
     }
 }
